@@ -20,19 +20,22 @@
 <body class="font-sans antialiased  bg-gray-50 dark:bg-gray-900">
     <x-navbar-navigation />
     <div class="min-h-screen bg-gray-100">
+        <x-sidebar-navigation />
         <!-- Page Heading -->
         <main class="p-4 md:ml-64 h-auto pt-20">
             @isset($header)
-                <x-sidebar-navigation />
                 <header class="bg-transparent rounded-lg">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <div class="max-w-full py-6 px-4 sm:px-6 lg:px-8">
+                        <x-auto-breadcrumb />
                         {{ $header }}
                     </div>
                 </header>
             @endisset
 
             <!-- Page Content -->
-            {{ $slot }}
+            <div class="max-w-full px-4 sm:px-6 lg:px-8">
+                {{ $slot }}
+            </div>
         </main>
     </div>
 </body>

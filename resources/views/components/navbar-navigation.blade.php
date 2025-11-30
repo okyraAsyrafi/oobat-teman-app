@@ -18,7 +18,9 @@
             <!-- Logo -->
             <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
                 <img src="{{ asset('images/logo.png') }}" class="h-8" alt="Flowbite Logo" />
-                <span class="self-center text-2xl font-semibold whitespace-nowrap ">Obat Teman TB</span>
+                {{-- 💡 WARNA TEMA: Vibrant Blue untuk Nama Aplikasi --}}
+                <span class="self-center text-2xl font-semibold whitespace-nowrap" style="color: #3D94F8;">Obat Teman
+                    TB</span>
             </a>
 
         </div>
@@ -46,8 +48,9 @@
                         <img class="w-8 h-8 rounded-full object-cover"
                             src="{{ Storage::url(Auth::user()->profile_photo_path) }}" alt="{{ Auth::user()->name }}">
                     @else
-                        <div
-                            class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-sm">
+                        {{-- 💡 WARNA TEMA: Avatar Placeholder menggunakan Vibrant Blue --}}
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm"
+                            style="background-color: #3D94F8;">
                             {{ Str::substr(Auth::user()->name, 0, 2) }}
                         </div>
                     @endif
@@ -73,7 +76,7 @@
                         <li>
                             <form method="POST" action="{{ route('logout') }}" x-data>
                                 @csrf
-                                <button type="submit"
+                                <button type="submit" {{-- 💡 WARNA TEMA: Menggunakan warna merah standar yang lebih aman untuk tombol Logout --}}
                                     class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
                                     Keluar
                                 </button>
@@ -95,8 +98,10 @@
     <div class="divide-y divide-gray-100">
         <a href="#" class="flex px-4 py-3 hover:bg-gray-100">
             <div class="flex-shrink-0">
-                <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
-                    <span class="text-indigo-600 font-bold text-sm">P</span>
+                {{-- 💡 WARNA TEMA: Notifikasi Placeholder menggunakan Mint Green --}}
+                <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                    style="background-color: #3CC39F1A;">
+                    <span class="font-bold text-sm" style="color: #3CC39F;">P</span>
                 </div>
             </div>
             <div class="pl-3 w-full">

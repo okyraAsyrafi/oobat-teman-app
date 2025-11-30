@@ -3,10 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Patient extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'name',
         'nik',
@@ -23,7 +27,7 @@ class Patient extends Model
         'is_active' => 'boolean',
     ];
 
-    // Relasi
+    // Relasi ke User (Petugas) yang membuat/memperbarui data pasien
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
@@ -32,5 +36,25 @@ class Patient extends Model
     public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    // Relasi ke Jadwal Obat (treatment_plans)
+    public function medicationSchedules(): HasMany
+    {
+        return $this->hasMany(MedicationSchedule::class);
+    }
+
+    // Relasi ke Log Konfirmasi Obat (medication_logs)
+    public function medicationLogs(): HasMany
+    {
+        // Dalam skema DDL Anda, medication_logs.created_by merujuk ke patients.id
+        return $this->hasMany(MedicationLog::class, 'created_by');
+    }
+
+    // Relasi ke Jawaban Kuesioner
+    public function questionAnswers(): HasMany
+    {
+        // Dalam skema DDL Anda, question_answers.patient_id merujuk ke patients.id
+        return $this->hasMany(QuestionAnswer::class, 'patient_id');
     }
 }
