@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Patient extends Model
 {
-    use HasFactory;
+    use HasFactory, HasApiTokens;
+
+    protected $guarded = ['id'];
+
+    // Kita sembunyikan kolom yang tidak perlu dilihat Flutter
+    protected $hidden = [
+        'created_by',
+        'updated_by',
+        'created_at',
+        'updated_at',
+        'is_active'
+    ];
 
     protected $fillable = [
         'name',

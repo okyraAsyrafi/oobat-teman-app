@@ -13,7 +13,22 @@
     use App\Http\Controllers\MedicationScheduleController;
 
     Route::get('/', function () {
-        return redirect()->route('login');
+        return view('layouts.landing');
+    })->name('landing');
+
+    // Menambahkan route untuk halaman edukasi spesifik agar bisa diakses publik
+    Route::prefix('edukasi')->name('edukasi.')->group(function () {
+        Route::get('/mengenal-gejala-tb', function () {
+            return view('landing.mengenal-gejala-tb');
+        })->name('mengenal-gejala-tb');
+
+        Route::get('/pentingnya-minum-obat', function () {
+            return view('landing.pentingnya-minum-obat');
+        })->name('pentingnya-minum-obat');
+
+        Route::get('/bernafas-lega-acbt', function () {
+            return view('landing.bernafas-lega-acbt');
+        })->name('bernafas-lega-acbt');
     });
 
     Route::middleware('auth')->group(function () {
