@@ -16,6 +16,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/schedules', [MedicationScheduleController::class, 'index']);
     Route::post('/medication-logs', [App\Http\Controllers\Api\MedicationScheduleController::class, 'storeLog']);
+    Route::patch('/schedules/{id}/toggle', [MedicationScheduleController::class, 'toggleStatus']);
 
     Route::get('/questions', [App\Http\Controllers\Api\QuestionnaireController::class, 'getQuestions']);
     Route::get('/check-questionnaire', [App\Http\Controllers\Api\QuestionnaireController::class, 'checkStatus']);

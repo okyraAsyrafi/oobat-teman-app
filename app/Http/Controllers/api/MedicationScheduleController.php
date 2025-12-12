@@ -100,4 +100,31 @@ class MedicationScheduleController extends Controller
             'data' => new MedicationLogResource($log),
         ], 201);
     }
+
+    public function toggleStatus(Request $request, $id)
+    {
+        $request->validate([
+            'is_active' => 'required|boolean'
+        ]);
+
+        $schedule = MedicationSchedule::where('id', $id)
+            ->where('patient_id', $request->user()->id)
+            ->first();
+
+        if (!$schedule) {
+            return response()->json([
+                'meta' => ['code' => 404, 'status' => 'error', 'message' => 'Jadwal tidak ditemukan']
+            ], 404);
+        }
+
+        $schedule->update([
+            'is_active' => $request->is_active,
+            'updated_by' => $request->user()->id // Mencatat siapa yang mengubah
+        ]);
+
+        return response()->json([
+            'meta' => ['code' => 200, 'status' => 'success', 'message' => 'Status alarm berhasil diperbarui'],
+            'data' => new ScheduleResource($schedule)
+        ]);
+    }
 }
