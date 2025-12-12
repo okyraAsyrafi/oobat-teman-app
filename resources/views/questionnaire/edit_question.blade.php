@@ -20,8 +20,11 @@
                 </div>
 
                 <div class="mb-4">
+                    {{-- BEST PRACTICE FIX: HIDDEN INPUT UNTUK MENGIRIM NILAI 0 --}}
+                    <input type="hidden" name="is_active" value="0">
+
                     <label class="inline-flex items-center">
-                        <input type="checkbox" name="is_active" value="1"
+                        <input type="checkbox" name="is_active" value="1" {{-- Gunakan $question->is_active === 1 agar kompatibel dengan input value=1 --}}
                             {{ old('is_active', $question->is_active) ? 'checked' : '' }} class="rounded text-blue-600">
                         <span class="ml-2 text-sm text-gray-700">Aktif</span>
                     </label>

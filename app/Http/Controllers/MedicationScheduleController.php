@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Patient;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
@@ -28,11 +29,33 @@ class MedicationScheduleController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        // Validasi durasi
+        // 1. Validasi Durasi (Tetap)
         if ($request->duration_days > 31) {
             return back()->withErrors(['duration_days' => 'Durasi maksimal 31 hari'])->withInput();
         }
 
+        // 2. Business Rule: Cek Jadwal Aktif Pasien (BARU DITAMBAHKAN)
+        // Tujuan: Mencegah dua jadwal aktif untuk satu pasien.
+        $patientId = $request->patient_id;
+
+        // Cek apakah ada jadwal yang aktif (is_active=true & status=0) DAN
+        // end_date-nya BELUM terlewat hari ini.
+        $activeSchedule = MedicationSchedule::where('patient_id', $patientId)
+            ->where('is_active', true)
+            ->where('status', 0)
+            ->get()
+            ->filter(function ($schedule) {
+                // Gunakan Helper getEndDateAttribute dari Model
+                return $schedule->end_date->greaterThanOrEqualTo(Carbon::today());
+            })
+            ->first();
+
+        if ($activeSchedule) {
+            $endDate = $activeSchedule->end_date->format('d M Y');
+            return back()->with('error', "Pasien ini masih memiliki jadwal aktif hingga {$endDate}. Mohon batalkan jadwal lama terlebih dahulu.")->withInput();
+        }
+
+        // 3. Eksekusi Create (Tetap)
         $schedule = MedicationSchedule::create([
             'patient_id' => $request->patient_id,
             'time_of_day' => $request->time_of_day,
@@ -76,12 +99,16 @@ class MedicationScheduleController extends Controller
 
     public function destroy(MedicationSchedule $schedule): RedirectResponse
     {
-        // Hanya bisa hapus jika belum ada log
+        // Business Rule: Hanya bisa hapus jika belum ada log (Tetap)
         if ($schedule->logs()->exists()) {
-            return back()->with('error', 'Jadwal ini sudah memiliki bukti konfirmasi. Tidak bisa dihapus.');
+            return back()->with('error', 'Jadwal ini sudah memiliki bukti konfirmasi atau log obat. Tidak bisa dihapus.');
         }
 
+        // Penghapusan Permanen (Hard Delete)
         $schedule->delete();
+
+        // Fix: Mengembalikan back() dengan session 'success'
+        // Tujuan: Memastikan pesan sukses muncul di view (index) setelah penghapusan
         return back()->with('success', 'Jadwal obat berhasil dihapus.');
     }
 }

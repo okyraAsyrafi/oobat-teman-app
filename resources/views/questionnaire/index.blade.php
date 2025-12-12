@@ -47,7 +47,10 @@
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="px-4 py-3">{{ Str::limit($q->question, 80) }}</td>
                                     <td class="px-4 py-3">
-                                        @if ($q->is_active)
+                                        @if ($q->deleted_at)
+                                            <span
+                                                class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">Dihapus</span>
+                                        @elseif ($q->is_active)
                                             <span
                                                 class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Aktif</span>
                                         @else

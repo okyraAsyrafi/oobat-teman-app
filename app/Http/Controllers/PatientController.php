@@ -61,7 +61,12 @@ class PatientController extends Controller
 
     public function destroy(Patient $patient): RedirectResponse
     {
+        $patient->update([
+            'is_active' => false,
+            'updated_by' => auth()->id(),
+        ]);
         $patient->delete();
-        return back()->with('success', 'Pasien berhasil dihapus.');
+
+        return back()->with('success', 'Pasien berhasil dinonaktifkan.');
     }
 }

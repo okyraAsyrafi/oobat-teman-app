@@ -15,12 +15,14 @@ class QuestionDetailAnswer extends Model
 
     public function question()
     {
-        return $this->belongsTo(QuestionnaireQuestion::class, 'questionnaire_question_id');
+        return $this->belongsTo(QuestionnaireQuestion::class, 'questionnaire_question_id')->withTrashed();
     }
 
+    // Relasi ke Opsi Jawaban
+    // PENTING: Gunakan withTrashed() karena opsi jawaban bisa di-soft delete
     public function option()
     {
-        return $this->belongsTo(QuestionnaireOption::class, 'questionnaire_option_id');
+        return $this->belongsTo(QuestionnaireOption::class, 'questionnaire_option_id')->withTrashed();
     }
 
     public function answer()

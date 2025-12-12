@@ -5,6 +5,16 @@
 
     <div class="py-6">
         <div class="bg-white rounded-lg shadow p-6">
+            @if ($errors->any())
+                <div class="mb-4 p-4 bg-red-100 text-red-800 text-sm rounded-lg">
+                    <strong class="font-bold">Terjadi Kesalahan:</strong>
+                    <ul class="mt-1 list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <form method="POST" action="{{ route('medication.schedules.store') }}">
                 @csrf
 

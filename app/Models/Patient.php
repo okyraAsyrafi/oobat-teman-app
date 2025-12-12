@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Patient extends Model
 {
-    use HasFactory, HasApiTokens;
+    use HasFactory, HasApiTokens, SoftDeletes;
 
     protected $guarded = ['id'];
 
@@ -20,9 +21,9 @@ class Patient extends Model
         'updated_by',
         'created_at',
         'updated_at',
-        'is_active'
+        'is_active',
+        'deleted_at' // <-- TAMBAHKAN INI
     ];
-
     protected $fillable = [
         'name',
         'nik',

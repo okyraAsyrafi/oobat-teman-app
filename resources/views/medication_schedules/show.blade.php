@@ -5,6 +5,16 @@
 
     <div class="py-6">
         <div class="bg-white shadow-md sm:rounded-lg overflow-hidden">
+            @if (session('success'))
+                <div class="mx-4 mt-4 px-4 py-3 bg-green-100 text-green-800 text-sm rounded-lg">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if (session('error'))
+                <div class="mx-4 mt-4 px-4 py-3 bg-red-100 text-red-800 text-sm rounded-lg">
+                    {{ session('error') }}
+                </div>
+            @endif
 
             <!-- Header -->
             <div class="p-4 border-b">
@@ -53,10 +63,20 @@
                                 </div>
                                 @if ($log->is_taken)
                                     <div class="mt-2">
-                                        <img src="{{ Storage::url($log->img_path) }}" alt="Bukti konfirmasi"
-                                            class="h-20 w-auto object-cover rounded">
-                                        <p class="mt-2 text-sm text-gray-700">
-                                            {{ $log->notes ?: 'Tidak ada keterangan' }}</p>
+                                        <h5 class="text-sm font-semibold text-gray-800 mb-2">Foto Bukti:</h5>
+
+                                        {{-- PERBAIKAN: Membuat gambar lebih besar dan clickable --}}
+                                        <a href="{{ Storage::url($log->img_path) }}" target="_blank"
+                                            title="Klik untuk melihat gambar ukuran penuh">
+                                            <img src="{{ Storage::url($log->img_path) }}" alt="Bukti konfirmasi"
+                                                {{-- Ukuran Diperbesar: H-32 (128px) atau H-48 (192px) --}}
+                                                class="h-32 w-auto object-cover rounded shadow-md transition duration-150 hover:opacity-80 cursor-pointer">
+                                        </a>
+                                        {{-- END PERBAIKAN --}}
+
+                                        <p class="mt-3 text-sm text-gray-700">
+                                            **Keterangan:** {{ $log->notes ?: 'Tidak ada keterangan' }}
+                                        </p>
                                     </div>
                                 @endif
                             </div>

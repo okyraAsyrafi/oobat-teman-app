@@ -28,8 +28,14 @@
             </div>
 
             @if (session('success'))
-                <div class="mx-4 mb-4 px-4 py-3 bg-green-100 text-green-800 text-sm rounded-lg">
+                <div class="mx-4 mt-4 px-4 py-3 bg-green-100 text-green-800 text-sm rounded-lg">
                     {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="mx-4 mt-4 px-4 py-3 bg-red-100 text-red-800 text-sm rounded-lg">
+                    {{ session('error') }}
                 </div>
             @endif
 

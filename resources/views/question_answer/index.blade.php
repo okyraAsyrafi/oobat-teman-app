@@ -40,7 +40,14 @@
                     <tbody>
                         @forelse ($results as $result)
                             <tr class="border-b hover:bg-gray-50">
-                                <td class="px-4 py-3 font-medium text-gray-900">{{ $result->patient->name }}</td>
+                                <td class="px-4 py-3 font-medium text-gray-900">{{ $result->patient->name }}
+                                    @if ($result->patient->deleted_at)
+                                        <span
+                                            class="ml-2 px-2 py-0.5 rounded text-xs bg-red-100 text-red-800 font-bold">
+                                            (Dihapus)
+                                        </span>
+                                    @endif
+                                </td>
                                 <td class="px-4 py-3">{{ $result->date_answer->format('Y-m-d') }}</td>
                                 <td class="px-4 py-3">{{ number_format($result->score_avg, 0) }}%</td>
                                 <td class="px-4 py-3">{{ $result->side_effect ?: 'Tidak ada' }}</td>

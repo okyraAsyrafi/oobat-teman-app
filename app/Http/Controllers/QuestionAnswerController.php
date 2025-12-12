@@ -9,7 +9,12 @@ class QuestionAnswerController extends Controller
 {
     public function index(): View
     {
-        $results = QuestionAnswer::with(['patient', 'details.question', 'details.option'])
+        // Pastikan relasi 'patient' dipanggil dengan benar
+        $results = QuestionAnswer::with([
+            'patient', // Akan menggunakan withTrashed() jika sudah diperbaiki di Model
+            'details.question',
+            'details.option'
+        ])
             ->latest()
             ->paginate(10);
 
@@ -18,7 +23,12 @@ class QuestionAnswerController extends Controller
 
     public function show(QuestionAnswer $result): View
     {
-        $result->load(['patient', 'details.question', 'details.option']);
+        // Pastikan relasi 'patient' dipanggil saat show
+        $result->load([
+            'patient', // Akan menggunakan withTrashed()
+            'details.question',
+            'details.option'
+        ]);
         return view('question_answer.show', compact('result'));
     }
 }

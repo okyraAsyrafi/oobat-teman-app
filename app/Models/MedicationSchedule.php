@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Models\MedicationLog;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MedicationSchedule extends Model
 {
@@ -35,7 +35,7 @@ class MedicationSchedule extends Model
 
     public function patient()
     {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(Patient::class)->withTrashed();
     }
 
     public function creator()
@@ -67,7 +67,9 @@ class MedicationSchedule extends Model
     // Helper: hitung end date
     public function getEndDateAttribute()
     {
-        return $this->start_date->addDays($this->duration_days - 1);
+        // Mengubah string start_date menjadi objek Carbon dan menambahkan durasi_hari dikurangi 1
+        // Asumsi: start_date di-cast sebagai date di Model ini
+        return Carbon::parse($this->start_date)->addDays($this->duration_days - 1);
     }
 
     // Helper: status label
@@ -80,5 +82,10 @@ class MedicationSchedule extends Model
     public function getStatusClassAttribute()
     {
         return $this->status === 1 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
+    }
+
+    public function hasLogs(): bool
+    {
+        return $this->logs()->exists();
     }
 }

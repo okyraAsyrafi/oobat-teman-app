@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\MedicationLog;
 use App\Models\MedicationSchedule;
@@ -54,7 +55,7 @@ class MedicationScheduleController extends Controller
     public function storeLog(StoreMedicationLogRequest $request)
     {
         $user = $request->user();
-
+        $schedule = MedicationSchedule::find($request->schedule_id);
         // 1. Upload File ke Storage
         if ($request->hasFile('photo')) {
             // Simpan di folder: storage/app/public/logs
@@ -74,6 +75,25 @@ class MedicationScheduleController extends Controller
             'img_path'    => $path, // Path gambar yg baru diupload
             'notes'       => $request->notes,
         ]);
+
+        $today = Carbon::today()->format('Y-m-d');
+        $endDate = $schedule->end_date->format('Y-m-d');
+
+        // Jika hari ini ADALAH hari terakhir jadwal DAN jadwal masih berstatus "Berlangsung" (0)
+        if ($today === $endDate && $schedule->status === 0) {
+
+            // Perbarui Status Jadwal menjadi Selesai (1) dan nonaktifkan
+            $schedule->update([
+                'is_active' => false,
+                'status' => 1,
+                // Opsional: Mencatat siapa yang menyelesaikan
+                'updated_by' => $user->id,
+            ]);
+
+            // Tambahkan pesan khusus untuk frontend jika diperlukan,
+            // tapi kita akan handle di Flutter, jadi cukup di log backend.
+            logger()->info("Jadwal ID {$schedule->id} pasien {$user->id} berhasil diselesaikan otomatis.");
+        }
 
         return response()->json([
             'meta' => ['code' => 201, 'status' => 'success', 'message' => 'Konfirmasi berhasil'],
